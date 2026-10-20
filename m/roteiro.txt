@@ -1,0 +1,62 @@
+# ROTEIRO DE EXEMPLO: reescreva do seu jeito.
+#
+# Como funciona:
+#   ---              separa os slides (ela toca para ir ao próximo)
+#   cada linha       é digitada uma depois da outra
+#   {a|b|c}          escreve "a", apaga, escreve "b"... o último fica na tela
+#   [foto 03.jpg]    mostra uma foto da pasta m/fotos/
+#   linha vazia      pausa curta
+#   # comentário     linhas que começam com # não aparecem no site
+
+Oi, Lu
+
+Se você está lendo isso, a carta chegou! 
+
+Toque na tela para seguir.
+Se quiser voltar, toque no canto esquerdo.
+---
+{A carta demorou|Quis pensar em como transmitir toda a minha consideração.}
+Enquanto você está longe, queremos nos fazer presentes.
+Então vamos relembrar alguns momentos!
+---
+[foto 01.jpg]
+Aqui, fomos de última hora para o aniversário de um amigo do primo da Bela.
+---
+[foto 02.jpg]
+Reunidos na casa da Laura para tomar um vinho.
+---
+Na casa do Perim para colocar o papo em dia.
+[foto 03.jpg]
+---
+Você esteve presente em todas as minhas saídas de carnaval.
+[foto 04.jpg]
+E Bela fazendo o roteiro.
+---
+No Radar depois da sua grande apresentação!!
+[foto 06.jpg]
+---
+No WebSummit!
+[foto 07.jpg]
+Estamos estudando e sempre atentos...
+Uma hora saberemos a solução que ofereceremos ao mundo.
+---
+Confirmando que estamos sempre atentos...
+[foto 08.jpg]
+Até nas ciladas kkkk
+---
+Celebrando você no seu aniversário!!!
+[foto 11.jpg]
+---
+E momentos que eu lembro com muita gratidão.
+[foto 10.jpg]
+Você maquiando a Sofia para as fotos de formatura dela. Em plena pandemia!
+---
+{Essas são algumas fotos que encontrei|Isso é só uma pequena parte de tudo que já fizemos juntos}.
+Desde 2010, quando estudamos juntos, foram muitas memórias. Aquele foi um ano maravilhoso.
+Íamos para o Minas e tínhamos assunto e ideias para preencher a tarde toda.
+E rendeu uma amizade para a vida toda!
+---
+O ideal seria marcar um Sushi Naka e matar a saudade...
+Até ser possível, aproveite muito aí!!!
+
+E sempre com sushi!

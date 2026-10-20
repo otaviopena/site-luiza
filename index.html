@@ -23,8 +23,9 @@
     padding:24px;
     text-align:center;
   }
-  .wrap{ max-width:420px; transition:opacity .6s ease; }
-  .wrap.saindo{ opacity:0; }
+  [hidden]{ display:none !important; }
+  .wrap, .etapa{ max-width:420px; transition:opacity .6s ease; }
+  .saindo{ opacity:0; }
   .dots{
     display:flex;
     justify-content:center;
@@ -53,6 +54,70 @@
     font-size:32px;
     margin:0 0 12px;
   }
+
+  /* Etapa 1: carregando */
+  .giro{
+    width:44px;
+    height:44px;
+    margin:0 auto;
+    border-radius:50%;
+    border:3px solid rgba(227,168,87,0.2);
+    border-top-color:#E3A857;
+    animation:girar .9s linear infinite;
+  }
+  @keyframes girar{ to{ transform:rotate(360deg); } }
+
+  /* Etapa 2: pronto */
+  #pronto h1{ animation:surgir .6s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes surgir{ from{ opacity:0; transform:scale(.8); } }
+
+  /* Etapa 3: prova */
+  #titulo-prova{ min-height:1.3em; }
+  .luiza{ color:#F4A3C4; white-space:nowrap; }
+  .cursor{
+    display:inline-block;
+    width:2px;
+    height:.9em;
+    margin-left:2px;
+    vertical-align:-0.08em;
+    background:#E3A857;
+    animation:piscar 1s steps(1) infinite;
+  }
+  @keyframes piscar{ 50%{ opacity:0; } }
+  #desafio{ transition:opacity .6s ease; }
+  #desafio.escondido{ opacity:0; pointer-events:none; }
+  #desafio p{
+    font-size:16px;
+    line-height:1.6;
+    color:rgba(245,239,224,0.85);
+    margin:20px 0;
+  }
+  form{ display:flex; gap:8px; }
+  input{
+    flex:1;
+    min-width:0;
+    font:inherit;
+    font-size:16px;
+    color:#F5EFE0;
+    background:rgba(245,239,224,0.06);
+    border:1px solid rgba(227,168,87,0.35);
+    border-radius:8px;
+    padding:12px 14px;
+  }
+  input:focus{ outline:none; border-color:#E3A857; }
+  form button{
+    font:inherit;
+    font-size:15px;
+    color:#14213D;
+    background:#E3A857;
+    border:0;
+    border-radius:8px;
+    padding:0 18px;
+    cursor:pointer;
+  }
+  form.errou{ animation:tremer .4s; }
+  @keyframes tremer{ 20%,60%{ transform:translateX(-8px); } 40%,80%{ transform:translateX(8px); } }
+  #erro{ min-height:1.6em; font-size:14px !important; color:#F4A3C4 !important; margin:12px 0 0 !important; }
 </style>
 </head>
 <body>
@@ -64,10 +129,39 @@
     </div>
     <h1>Em construção</h1>
   </div>
+
+  <div class="etapa" id="carregando" hidden><div class="giro" role="status" aria-label="Carregando"></div></div>
+
+  <div class="etapa" id="pronto" hidden><h1>Finalmente construído!!!</h1></div>
+
+  <div class="etapa" id="prova" hidden>
+    <h1 id="titulo-prova"></h1>
+    <div id="desafio" class="escondido">
+      <p>Qual seria a sua primeira escolha para comer um sushi em plena quarta-feira se estivesse em BH?</p>
+      <form>
+        <input type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Resposta">
+        <button type="submit">Enviar</button>
+      </form>
+      <p id="erro" aria-live="polite"></p>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
   const SEQ = [1, 2, 3];
   const toques = [];
-  const wrap = document.querySelector('.wrap');
+  const espera = ms => new Promise(ok => setTimeout(ok, ms));
+
+  // Troca de uma etapa para outra com fade
+  async function troca(de, para) {
+    de.classList.add('saindo');
+    await espera(600);
+    de.hidden = true;
+    para.classList.add('saindo');
+    para.hidden = false;
+    await espera(30);
+    para.classList.remove('saindo');
+  }
 
   document.querySelectorAll('.dots button').forEach(b => {
     b.addEventListener('click', () => {
@@ -76,12 +170,95 @@
 
       toques.push(Number(b.dataset.n));
       if (toques.length > SEQ.length) toques.shift();
-      if (toques.join() !== SEQ.join()) return;
-
-      try { sessionStorage.setItem('liberado', '1'); } catch (e) {}
-      wrap.classList.add('saindo');
-      setTimeout(() => { location.href = 'm/'; }, 600);
+      if (toques.join() === SEQ.join()) abre();
     });
+  });
+
+  async function abre() {
+    document.querySelectorAll('.dots button').forEach(b => b.disabled = true);
+    const wrap = document.querySelector('.wrap');
+    const carregando = document.getElementById('carregando');
+    const pronto = document.getElementById('pronto');
+    const prova = document.getElementById('prova');
+
+    await troca(wrap, carregando);
+    await espera(2800);
+    await troca(carregando, pronto);
+    soltaConfete();
+    await espera(3200);
+    await troca(pronto, prova);
+    await escreveProva();
+  }
+
+  function soltaConfete() {
+    if (typeof confetti !== 'function') return;
+    const cores = ['#E3A857', '#F5EFE0', '#F4A3C4', '#7FB8E6'];
+    confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 }, colors: cores });
+    setTimeout(() => {
+      confetti({ particleCount: 70, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors: cores });
+      confetti({ particleCount: 70, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors: cores });
+    }, 350);
+  }
+
+  // "Prove que você é humano" → apaga "humano" → escreve "a Luiza" em rosa
+  async function escreveProva() {
+    const titulo = document.getElementById('titulo-prova');
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    const digita = async (alvo, texto) => {
+      const no = document.createTextNode('');
+      alvo.appendChild(no);
+      alvo.appendChild(cursor);
+      for (const c of texto) { no.data += c; await espera(60); }
+      return no;
+    };
+
+    await digita(titulo, 'Prove que você é ');
+    const palavra = document.createElement('span');
+    titulo.appendChild(palavra);
+    const humano = await digita(palavra, 'humano');
+    await espera(1100);
+    while (humano.data.length) { humano.data = humano.data.slice(0, -1); await espera(70); }
+    await espera(400);
+    palavra.className = 'luiza';
+    await digita(palavra, 'a Luiza');
+    await espera(900);
+    cursor.remove();
+
+    const desafio = document.getElementById('desafio');
+    desafio.classList.remove('escondido');
+    desafio.querySelector('input').focus();
+  }
+
+  // Aceita "Sushi Naka", "naka", "SUSHI NAKA BH", "sushi-naka", pequenos erros de digitação...
+  const normaliza = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z]/g, '');
+  function distancia(a, b) {
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++)
+      for (let j = 1; j <= b.length; j++)
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return d[a.length][b.length];
+  }
+  const correta = r => r.includes('naka') || distancia(r, 'sushinaka') <= 2 || distancia(r, 'naka') <= 1;
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const input = form.querySelector('input');
+    const erro = document.getElementById('erro');
+    if (!correta(normaliza(input.value))) {
+      erro.textContent = 'Hmm… não parece a Luiza. Tente de novo.';
+      form.classList.remove('errou');
+      void form.offsetWidth;
+      form.classList.add('errou');
+      return;
+    }
+    erro.textContent = '';
+    try { sessionStorage.setItem('liberado', '1'); } catch (e) {}
+    document.getElementById('prova').classList.add('saindo');
+    await espera(600);
+    location.href = 'm/';
   });
 </script>
 </body>
