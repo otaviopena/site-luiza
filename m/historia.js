@@ -124,22 +124,52 @@ async function anima(passos, g) {
   }
 }
 
-// Monta o slide já pronto, sem animação (para pular e para voltar)
-function desenhaFinal(passos) {
-  slideEl.classList.remove('saindo');
-  slideEl.replaceChildren();
+// Monta o slide já pronto, sem animação (para pular, para voltar e para medir)
+function desenhaFinal(passos, alvo = slideEl) {
+  if (alvo === slideEl) slideEl.classList.remove('saindo');
+  alvo.replaceChildren();
   for (const passo of passos) {
     if (passo.tipo === 'foto') {
       const img = criaFoto(passo.src);
       img.classList.add('visivel');
-      slideEl.appendChild(img);
+      alvo.appendChild(img);
     } else if (passo.tipo === 'texto') {
       const p = document.createElement('p');
       p.className = 'linha';
       p.textContent = passo.segs.map(s => (typeof s === 'string' ? s : s[s.length - 1])).join('');
-      slideEl.appendChild(p);
+      alvo.appendChild(p);
     }
   }
+}
+
+// Diminui letra e fotos até o slide inteiro (já completo) caber na tela, sem rolagem
+const medidor = document.getElementById('medidor');
+
+async function ajustaTamanho(n) {
+  desenhaFinal(slides[n], medidor);
+  if (n === slides.length - 1) {
+    const b = document.createElement('button');
+    b.className = 'para-japas';
+    b.textContent = 'Pesquisa de japas em Madrid 😄';
+    medidor.appendChild(b);
+  }
+  await Promise.all([...medidor.querySelectorAll('img')].map(fotoCarregada));
+
+  const disponivel = palco.clientHeight - parseFloat(getComputedStyle(palco).paddingTop) - parseFloat(getComputedStyle(palco).paddingBottom);
+  let fonte = 26;
+  let foto = 0.55;
+  const aplica = el => {
+    el.style.setProperty('--fonte', `${fonte}px`);
+    el.style.setProperty('--foto', `${Math.round(disponivel * foto)}px`);
+  };
+  aplica(medidor);
+  while (medidor.scrollHeight > disponivel && (fonte > 15 || foto > 0.22)) {
+    if (fonte > 15) fonte -= 1;
+    if (foto > 0.22) foto -= 0.025;
+    aplica(medidor);
+  }
+  aplica(slideEl);
+  medidor.replaceChildren();
 }
 
 // ---------- Navegação ----------
@@ -174,6 +204,8 @@ async function mostra(n, { animado = true } = {}) {
     await new Promise(ok => setTimeout(ok, 350));
     if (g !== geracao) return; // tocou durante a transição: completaAgora já desenhou este slide
   }
+  await ajustaTamanho(n);
+  if (g !== geracao) return;
   slideEl.classList.remove('saindo');
   slideEl.scrollTop = 0;
 
@@ -191,7 +223,15 @@ function completaAgora() {
   geracao++;
   desenhaFinal(slides[atual]);
   marcaCompleto();
+  ajustaTamanho(atual);
 }
+
+// Celular girado ou janela redimensionada: recalcula o tamanho do slide atual
+let redimensiona;
+addEventListener('resize', () => {
+  clearTimeout(redimensiona);
+  redimensiona = setTimeout(() => { if (slides.length && !palco.hidden) ajustaTamanho(atual); }, 200);
+});
 
 function avanca() {
   if (!completo) completaAgora();

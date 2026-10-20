@@ -58,10 +58,22 @@ body.modo-historia{ overflow:hidden; }
   transition:opacity .35s ease;
 }
 #slide.saindo{ opacity:0; }
+/* Cópia invisível do slide, usada para medir antes de animar */
+#medidor{
+  position:absolute;
+  top:0;
+  left:24px;
+  right:24px;
+  max-width:560px;
+  margin:0 auto;
+  display:flow-root;
+  visibility:hidden;
+  pointer-events:none;
+}
 .linha{
   font-family:'Fraunces', serif;
   font-weight:500;
-  font-size:26px;
+  font-size:var(--fonte, 26px);
   line-height:1.4;
   margin:0 0 .6em;
 }
@@ -78,8 +90,7 @@ body.modo-historia{ overflow:hidden; }
 .foto{
   display:block;
   max-width:100%;
-  max-height:55vh;
-  max-height:55dvh;
+  max-height:var(--foto, 55vh);
   margin:.2em 0 1em;
   border-radius:6px;
   opacity:0;
