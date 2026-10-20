@@ -5,7 +5,7 @@ body{
     radial-gradient(ellipse at 30% 0%, #1c2d52 0%, transparent 50%),
     #14213D;
   background-attachment:fixed;
-  font-family:'Space Grotesk', sans-serif;
+  font-family:Calibri, Carlito, sans-serif;
   color:#F5EFE0;
   line-height:1.6;
   animation:entrar .8s ease;
@@ -18,8 +18,8 @@ section{
   padding:72px 16px 24px;
 }
 h2{
-  font-family:'Fraunces', serif;
-  font-weight:500;
+  font-family:Calibri, Carlito, sans-serif;
+  font-weight:700;
   font-size:28px;
   margin:0 0 28px;
   text-align:center;
@@ -27,7 +27,7 @@ h2{
 h2::before{
   content:'· · ·';
   display:block;
-  font-family:'Space Grotesk', sans-serif;
+  font-family:Calibri, Carlito, sans-serif;
   font-size:13px;
   letter-spacing:3px;
   color:#E3A857;
@@ -54,7 +54,7 @@ body.modo-historia{ overflow:hidden; }
   max-width:560px;
   max-height:100%;
   margin:0 auto;
-  overflow-y:auto;
+  overflow:hidden;
   transition:opacity .35s ease;
 }
 #slide.saindo{ opacity:0; }
@@ -71,8 +71,8 @@ body.modo-historia{ overflow:hidden; }
   pointer-events:none;
 }
 .linha{
-  font-family:'Fraunces', serif;
-  font-weight:500;
+  font-family:Calibri, Carlito, sans-serif;
+  font-weight:400;
   font-size:var(--fonte, 26px);
   line-height:1.4;
   margin:0 0 .6em;
@@ -127,7 +127,7 @@ body.modo-historia{ overflow:hidden; }
   transition:width .5s ease;
 }
 .para-japas, #reiniciar{
-  font-family:'Space Grotesk', sans-serif;
+  font-family:Calibri, Carlito, sans-serif;
   font-size:14px;
   letter-spacing:1px;
   color:#14213D;
@@ -172,7 +172,7 @@ body.modo-historia{ overflow:hidden; }
 }
 /* Escurece o mapa do OpenStreetMap para combinar com o azul-marinho */
 .leaflet-tile-pane{ filter:invert(1) hue-rotate(200deg) brightness(.85) contrast(.9) saturate(.6); }
-.leaflet-popup-content{ font-family:'Space Grotesk', sans-serif; font-size:13px; line-height:1.5; }
+.leaflet-popup-content{ font-family:Calibri, Carlito, sans-serif; font-size:13px; line-height:1.5; }
 .leaflet-popup-content a{ color:#b06f1c; }
 
 .lista{ list-style:none; padding:0; margin:28px 0 0; }

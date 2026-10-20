@@ -146,6 +146,7 @@ function desenhaFinal(passos, alvo = slideEl) {
 const medidor = document.getElementById('medidor');
 
 async function ajustaTamanho(n) {
+  await document.fonts.ready;
   desenhaFinal(slides[n], medidor);
   if (n === slides.length - 1) {
     const b = document.createElement('button');
