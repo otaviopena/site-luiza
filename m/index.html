@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Só entra quem passou pelas bolinhas nesta aba.
+  try { if (sessionStorage.getItem('liberado') !== '1') location.replace('../'); } catch (e) {}
+</script>
+<title>Para a Luiza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <nav>
+    <a href="#mensagem">Mensagem</a>
+    <a href="#fotos">Fotos</a>
+    <a href="#japas">Pesquisa de japas em Madrid 😄</a>
+  </nav>
+
+  <section id="mensagem">
+    <h2>Mensagem</h2>
+    <div class="mensagem">
+      <!-- TEXTO DE EXEMPLO: troque pelos seus parágrafos -->
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+      <p>Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper nulla non metus auctor fringilla.</p>
+      <p class="assinatura">— Otávio</p>
+    </div>
+  </section>
+
+  <section id="fotos">
+    <h2>Fotos</h2>
+    <div class="fotos">
+      <figure>
+        <img src="fotos/01.jpg" alt="" width="768" height="1024" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/02.jpg" alt="" width="1024" height="768" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/03.jpg" alt="" width="648" height="1212" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/04.jpg" alt="" width="768" height="1024" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/05.jpg" alt="" width="1024" height="768" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/06.jpg" alt="" width="1024" height="768" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/07.jpg" alt="" width="360" height="480" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/08.jpg" alt="" width="1024" height="768" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/09.jpg" alt="" width="1024" height="768" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/10.jpg" alt="" width="360" height="480" loading="lazy">
+      </figure>
+      <figure>
+        <img src="fotos/11.jpg" alt="" width="360" height="480" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <section id="japas">
+    <h2>Pesquisa de japas em Madrid 😄</h2>
+    <div class="legenda">
+      <span style="--cor:#E3A857">Guia Michelin</span>
+      <span style="--cor:#7FB8E6">Mais bem avaliados no Google</span>
+    </div>
+    <div id="mapa"></div>
+    <ul class="lista" id="lista"></ul>
+    <p class="fonte" id="fonte"></p>
+  </section>
+
+  <footer>· · ·</footer>
+
+  <dialog id="ampliada"><img alt=""></dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  // Fotos: toque abre em tela cheia
+  const dialog = document.getElementById('ampliada');
+  document.querySelectorAll('.fotos img').forEach(img => {
+    img.addEventListener('click', () => {
+      dialog.querySelector('img').src = img.src;
+      dialog.showModal();
+    });
+  });
+  dialog.addEventListener('click', () => dialog.close());
+
+  // Japas: mapa + lista a partir de restaurantes.json
+  const CORES = { michelin: '#E3A857', google: '#7FB8E6' };
+  const mapa = L.map('mapa', { scrollWheelZoom: false }).setView([40.4230, -3.6950], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(mapa);
+
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const nota = r => r.nota_google && `★ ${r.nota_google.toLocaleString('pt-BR', { minimumFractionDigits: 1 })} no Google (${r.avaliacoes.toLocaleString('pt-BR')})`;
+  const info = r => [r.distincao, nota(r)].filter(Boolean).join(' · ');
+
+  fetch('restaurantes.json')
+    .then(r => r.json())
+    .then(({ atualizado, restaurantes }) => {
+      const lista = document.getElementById('lista');
+      const pontos = [];
+      restaurantes.forEach(r => {
+        L.circleMarker([r.lat, r.lng], {
+          radius: 7, color: '#14213D', weight: 2, fillColor: CORES[r.tipo], fillOpacity: 1
+        }).addTo(mapa).bindPopup(
+          `<strong>${esc(r.nome)}</strong><br>${esc(r.endereco)}<br>${esc(info(r))}<br>` +
+          `<a href="${esc(r.maps)}" target="_blank" rel="noopener">Abrir no Google Maps</a>`
+        );
+        // Enquadra só a cidade: pins a mais de 8 km do centro ficam fora do zoom inicial
+        if (mapa.distance([40.4168, -3.7038], [r.lat, r.lng]) < 8000) pontos.push([r.lat, r.lng]);
+
+        const li = document.createElement('li');
+        li.innerHTML =
+          `<div><a class="nome" href="${esc(r.maps)}" target="_blank" rel="noopener">${esc(r.nome)}</a>` +
+          `<span class="endereco">${esc(r.endereco)}</span></div><div class="info">${esc(info(r))}</div>`;
+        lista.appendChild(li);
+      });
+      if (pontos.length) mapa.fitBounds(pontos, { padding: [24, 24] });
+      if (atualizado) document.getElementById('fonte').textContent = `Dados de ${atualizado}.`;
+    });
+</script>
+</body>
+</html>

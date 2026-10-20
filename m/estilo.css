@@ -1,0 +1,141 @@
+*{box-sizing:border-box;}
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 30% 0%, #1c2d52 0%, transparent 50%),
+    #14213D;
+  background-attachment:fixed;
+  font-family:'Space Grotesk', sans-serif;
+  color:#F5EFE0;
+  line-height:1.6;
+  animation:entrar .8s ease;
+}
+@keyframes entrar{ from{ opacity:0; } to{ opacity:1; } }
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:4px 20px;
+  padding:14px 16px;
+  background:rgba(20,33,61,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(227,168,87,0.15);
+}
+nav a{
+  color:rgba(245,239,224,0.7);
+  text-decoration:none;
+  font-size:13px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+nav a:hover{ color:#E3A857; }
+
+section{
+  max-width:760px;
+  margin:0 auto;
+  padding:72px 16px 24px;
+  scroll-margin-top:40px;
+}
+h2{
+  font-family:'Fraunces', serif;
+  font-weight:500;
+  font-size:28px;
+  margin:0 0 28px;
+  text-align:center;
+}
+h2::before{
+  content:'· · ·';
+  display:block;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px;
+  letter-spacing:3px;
+  color:#E3A857;
+  margin-bottom:12px;
+}
+
+/* Mensagem */
+.mensagem{
+  max-width:600px;
+  margin:0 auto;
+  font-family:'Fraunces', serif;
+  font-size:18px;
+  line-height:1.75;
+}
+.mensagem p{ margin:0 0 1.2em; }
+.mensagem .assinatura{ text-align:right; color:#E3A857; }
+
+/* Fotos */
+.fotos{ display:grid; gap:40px; }
+.fotos figure{ margin:0; }
+.fotos figure{ text-align:center; }
+.fotos img{
+  display:block;
+  margin:0 auto;
+  width:auto;
+  max-width:100%;
+  max-height:80vh;
+  height:auto;
+  border-radius:4px;
+  cursor:zoom-in;
+}
+
+dialog{
+  padding:0;
+  border:0;
+  background:none;
+  max-width:96vw;
+  max-height:96vh;
+}
+dialog::backdrop{ background:rgba(10,16,30,0.94); }
+dialog img{ display:block; max-width:96vw; max-height:96vh; cursor:zoom-out; }
+
+/* Japas */
+.legenda{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  font-size:13px;
+  margin-bottom:12px;
+  color:rgba(245,239,224,0.7);
+}
+.legenda span::before{
+  content:'';
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  margin-right:6px;
+  background:var(--cor);
+}
+#mapa{
+  height:420px;
+  border-radius:4px;
+  border:1px solid rgba(227,168,87,0.2);
+  background:#0e1a33;
+}
+/* Escurece o mapa do OpenStreetMap para combinar com o azul-marinho */
+.leaflet-tile-pane{ filter:invert(1) hue-rotate(200deg) brightness(.85) contrast(.9) saturate(.6); }
+.leaflet-popup-content{ font-family:'Space Grotesk', sans-serif; font-size:13px; line-height:1.5; }
+.leaflet-popup-content a{ color:#b06f1c; }
+
+.lista{ list-style:none; padding:0; margin:28px 0 0; }
+.lista li{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 0;
+  border-bottom:1px solid rgba(245,239,224,0.08);
+  font-size:15px;
+}
+.lista .nome{ color:#F5EFE0; text-decoration:none; }
+.lista .nome:hover{ color:#E3A857; }
+.lista .endereco{ display:block; font-size:13px; color:rgba(245,239,224,0.5); }
+.lista .info{ text-align:right; flex:0 0 45%; font-size:13px; color:rgba(245,239,224,0.7); }
+.fonte{ margin-top:16px; font-size:12px; color:rgba(245,239,224,0.45); text-align:center; }
+
+footer{ padding:48px 16px; text-align:center; color:#E3A857; letter-spacing:3px; font-size:13px; }

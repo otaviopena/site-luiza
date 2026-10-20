@@ -23,33 +23,66 @@
     padding:24px;
     text-align:center;
   }
-  .wrap{ max-width:420px; }
+  .wrap{ max-width:420px; transition:opacity .6s ease; }
+  .wrap.saindo{ opacity:0; }
   .dots{
+    display:flex;
+    justify-content:center;
+    margin:-13px 0 5px;
+  }
+  .dots button{
     font-family:'Space Grotesk', sans-serif;
     font-size:13px;
-    letter-spacing:3px;
-    text-transform:uppercase;
+    line-height:1;
     color:#E3A857;
-    margin-bottom:18px;
+    background:none;
+    border:0;
+    padding:0;
+    width:24px;
+    height:44px;
+    cursor:default;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+    transition:color .25s ease;
   }
+  .dots button:focus{ outline:none; }
+  .dots button.brilho{ color:#F5EFE0; transition:none; }
   h1{
     font-family:'Fraunces', serif;
     font-weight:500;
     font-size:32px;
     margin:0 0 12px;
   }
-  p{
-    font-size:15px;
-    line-height:1.6;
-    color:rgba(245,239,224,0.7);
-    margin:0;
-  }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="dots">· · ·</div>
+    <div class="dots">
+      <button type="button" data-n="1" aria-label="·">·</button>
+      <button type="button" data-n="2" aria-label="·">·</button>
+      <button type="button" data-n="3" aria-label="·">·</button>
+    </div>
     <h1>Em construção</h1>
   </div>
+<script>
+  const SEQ = [1, 2, 3];
+  const toques = [];
+  const wrap = document.querySelector('.wrap');
+
+  document.querySelectorAll('.dots button').forEach(b => {
+    b.addEventListener('click', () => {
+      b.classList.add('brilho');
+      requestAnimationFrame(() => requestAnimationFrame(() => b.classList.remove('brilho')));
+
+      toques.push(Number(b.dataset.n));
+      if (toques.length > SEQ.length) toques.shift();
+      if (toques.join() !== SEQ.join()) return;
+
+      try { sessionStorage.setItem('liberado', '1'); } catch (e) {}
+      wrap.classList.add('saindo');
+      setTimeout(() => { location.href = 'm/'; }, 600);
+    });
+  });
+</script>
 </body>
 </html>
